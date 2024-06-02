@@ -1,4 +1,3 @@
-import * as moment from 'moment';
 import { Injectable } from '@nestjs/common';
 import { PrismaService, PaymentsService } from '@/services';
 import { BusRoutesService } from '@/modules/bus-routes/bus-routes.service';
@@ -12,7 +11,7 @@ export class BusTicketsService {
   ) {}
 
   async create(data: any) {
-    const ticketNo = moment().unix();
+    const ticketNo = new Date().getTime();
     const busRoute = await this.busRoutesService.getById(data.busRouteId);
     const paymentLink = await this.paymentsService.createPaymentLink({
       amount: busRoute.ticketPrice,
