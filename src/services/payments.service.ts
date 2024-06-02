@@ -1,6 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
+type CreatePaymentLinkPayload = {
+  amount: number;
+  description: string;
+};
+
 @Injectable()
 export class PaymentsService {
   private paymongo: any;
@@ -10,10 +15,12 @@ export class PaymentsService {
     this.paymongo = require('paymongo-node')(configService.get<string>('APP_PAYMONGO_PRIVATE'));
   }
 
-  async createPaymentLink() {
+  async createPaymentLink(payload: CreatePaymentLinkPayload) {
+    const formattedAmount: string = `${payload.amount}00`;
+
     const link = await this.paymongo.links.create({
-      amount: 10000,
-      description: 'sample description',
+      amount: formattedAmount,
+      description: payload.description,
     });
 
     return link;

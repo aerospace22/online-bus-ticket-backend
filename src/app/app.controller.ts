@@ -11,6 +11,9 @@ export class AppController {
 
   @Get()
   async getHello() {
-    return await this.paymentsService.createPaymentLink();
+    return await this.paymentsService.createPaymentLink({
+      amount: 500,
+      description: '[TEST] - Test transaction',
+    });
   }
 }

@@ -60,13 +60,16 @@ model BusRoute {
 }
 
 model BusRouteTicket {
-  id          Int       @id @default(autoincrement())
-  userId      Int
-  busRouteId  Int
-  ticketNo    String    @unique
-  paymentData String    @db.Text
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime? @updatedAt
-  busRoute    BusRoute  @relation(references: [id], fields: [busRouteId], onDelete: Cascade)
-  boughtBy    User      @relation(references: [id], fields: [userId], onDelete: Cascade)
+  id                 Int       @id @default(autoincrement())
+  userId             Int
+  busRouteId         Int
+  ticketNo           String    @unique
+  paymentLink        String
+  paymentAmount      String
+  paymentDescription String
+  paymentStatus      String    @default("unpaid")
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime? @updatedAt
+  busRoute           BusRoute  @relation(references: [id], fields: [busRouteId], onDelete: Cascade)
+  boughtBy           User      @relation(references: [id], fields: [userId], onDelete: Cascade)
 }
