@@ -11,11 +11,11 @@ export class BusTicketsService {
   ) {}
 
   async create(data: any) {
-    const ticketNo = new Date().getTime();
+    const ticketNo = `TCKT${new Date().getTime()}`;
     const busRoute = await this.busRoutesService.getById(data.busRouteId);
     const paymentLink = await this.paymentsService.createPaymentLink({
       amount: busRoute.ticketPrice,
-      description: `[TICKET-PAYMENT] - TICKET${ticketNo}`,
+      description: `[TICKET-PAYMENT] - ${ticketNo}`,
     });
 
     const ticket = await this.prismaService.busRouteTicket.create({
