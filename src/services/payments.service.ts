@@ -1,26 +1,29 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class PaymentsService {
-  private paymentObj: any;
+  private paymongo: any;
 
-  constructor() {
+  constructor(private readonly configService: ConfigService) {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    this.paymentObj = require('paymongo-node')('sk_test_dQSVMGNQGCnTyUXq77sCWAbR');
+    this.paymongo = require('paymongo-node')(configService.get<string>('APP_PAYMONGO_PRIVATE'));
   }
 
   async createPaymentLink() {
-    await this.paymentObj.links
-      .create({
-        amount: 10000,
-        description: 'sample description',
-        // insert other required attributes here
-      })
-      .then((r) => console.log(r))
-      .catch((e) => console.log(e));
+    const link = await this.paymongo.links.create({
+      amount: 10000,
+      description: 'sample description',
+    });
+
+    return link;
   }
 
   async getPaymentLinkByReference(referenceId: string) {
-    //
+    const link = await this.paymongo.links.getLinkByReferenceNumber({
+      reference_number: referenceId,
+    });
+
+    return link;
   }
 }
