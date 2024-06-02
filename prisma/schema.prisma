@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              Int              @id @default(autoincrement())
+  accountNo       String           @unique
+  accountType     String
+  firstName       String
+  lastName        String
+  email           String           @unique
+  password        String
+  isVerified      Boolean          @default(false)
+  isBlacklisted   Boolean          @default(false)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime?        @updatedAt
+  deletedAt       DateTime?
+  userOtps        UserOtp[]
+  busRouteTickets BusRouteTicket[]
+}
+
+model UserOtp {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  code      String
+  isUsed    Boolean   @default(false)
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  user      User      @relation(references: [id], fields: [userId], onDelete: Cascade)
+}
+
+model BusRoute {
+  id              Int              @id @default(autoincrement())
+  busNo           String
+  routeCode       String           @unique
+  routeFrom       String
+  routeTo         String
+  routeFromMapPin String?
+  routeToMapPin   String?
+  ticketPrice     Float
+  departureTime   String
+  departureDate   String
+  arrivalTime     String?
+  arrivalDate     String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime?        @updatedAt
+  busRouteTicket  BusRouteTicket[]
+}
+
+model BusRouteTicket {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  busRouteId  Int
+  ticketNo    String    @unique
+  paymentData String    @db.Text
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
+  busRoute    BusRoute  @relation(references: [id], fields: [busRouteId], onDelete: Cascade)
+  boughtBy    User      @relation(references: [id], fields: [userId], onDelete: Cascade)
+}
