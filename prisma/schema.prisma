@@ -14,20 +14,20 @@ datasource db {
 }
 
 model User {
-  id              Int              @id @default(autoincrement())
-  accountNo       String           @unique
-  accountType     String
-  firstName       String
-  lastName        String
-  email           String           @unique
-  password        String
-  isVerified      Boolean          @default(false)
-  isBlacklisted   Boolean          @default(false)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime?        @updatedAt
-  deletedAt       DateTime?
-  userOtps        UserOtp[]
-  busRouteTickets BusRouteTicket[]
+  id                     Int                     @id @default(autoincrement())
+  accountNo              String                  @unique
+  accountType            String
+  firstName              String
+  lastName               String
+  email                  String                  @unique
+  password               String
+  isVerified             Boolean                 @default(false)
+  isBlacklisted          Boolean                 @default(false)
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime?               @updatedAt
+  deletedAt              DateTime?
+  userOtps               UserOtp[]
+  busRouteBookingTickets BusRouteBookingTicket[]
 }
 
 model UserOtp {
@@ -41,35 +41,72 @@ model UserOtp {
   user      User      @relation(references: [id], fields: [userId], onDelete: Cascade)
 }
 
+model Bus {
+  id            Int       @id @default(autoincrement())
+  busNo         String
+  plateNo       String
+  driverName    String
+  conductorName String
+  type          String    @default("ordinary")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime? @updatedAt
+}
+
+model BusStaff {
+  id        Int       @id @default(autoincrement())
+  name      String
+  contact   String
+  photo     String?
+  type      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
 model BusRoute {
-  id              Int              @id @default(autoincrement())
-  busNo           String
-  routeCode       String           @unique
+  id              Int                     @id @default(autoincrement())
+  routeCode       String                  @unique
   routeFrom       String
   routeTo         String
   routeFromMapPin String?
   routeToMapPin   String?
-  ticketPrice     Float
   departureTime   String
   departureDate   String
   arrivalTime     String?
   arrivalDate     String?
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime?        @updatedAt
-  busRouteTicket  BusRouteTicket[]
+  createdAt       DateTime                @default(now())
+  updatedAt       DateTime?               @updatedAt
+  busRouteTicket  BusRouteBookingTicket[]
 }
 
 model BusRouteTicket {
-  id                 Int       @id @default(autoincrement())
-  userId             Int
-  busRouteId         Int
-  ticketNo           String    @unique
-  paymentLink        String
-  paymentAmount      String
-  paymentDescription String
-  paymentStatus      String    @default("unpaid")
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime? @updatedAt
-  busRoute           BusRoute  @relation(references: [id], fields: [busRouteId], onDelete: Cascade)
-  boughtBy           User      @relation(references: [id], fields: [userId], onDelete: Cascade)
+  id             Int       @id @default(autoincrement())
+  busRouteId     Int
+  type           String    @default("ordinary")
+  availableCount Int       @default(0)
+  price          Float
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime? @updatedAt
+}
+
+model BusRouteBookingTicket {
+  id                           Int                           @id @default(autoincrement())
+  userId                       Int
+  busRouteId                   Int
+  ticketNo                     String                        @unique
+  createdAt                    DateTime                      @default(now())
+  updatedAt                    DateTime?                     @updatedAt
+  busRoute                     BusRoute                      @relation(references: [id], fields: [busRouteId], onDelete: Cascade)
+  user                         User                          @relation(references: [id], fields: [userId], onDelete: Cascade)
+  busRouteBookingTicketPayment BusRouteBookingTicketPayment?
+}
+
+model BusRouteBookingTicketPayment {
+  id                      Int                   @id @default(autoincrement())
+  busRouteBookingTicketId Int                   @unique
+  link                    String
+  status                  String                @default("unpaid")
+  data                    String                @db.Text
+  createdAt               DateTime              @default(now())
+  updatedAt               DateTime?             @updatedAt
+  busRouteBookingTicket   BusRouteBookingTicket @relation(references: [id], fields: [busRouteBookingTicketId], onDelete: Cascade)
 }

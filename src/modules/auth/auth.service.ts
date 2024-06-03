@@ -33,10 +33,15 @@ export class AuthService {
   }
 
   async authenticateAccount(credentials: AuthCredentials) {
-    const { email, password } = credentials;
+    const { email, password, loginType } = credentials;
+
     const user = await this.usersService.findByEmail(email);
 
-    if (!user || !(await this.verifyUserPassword(user, password))) {
+    if (
+      !user ||
+      !user.accountType.includes(loginType) ||
+      !(await this.verifyUserPassword(user, password))
+    ) {
       return null;
     }
 

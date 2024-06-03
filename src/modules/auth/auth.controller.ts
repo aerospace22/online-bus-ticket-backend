@@ -25,7 +25,7 @@ export class AuthController {
     const result = await this.authService.authenticateAccount(payload);
 
     if (!result) {
-      return response.status(HttpStatus.UNAUTHORIZED).json(result);
+      return response.status(HttpStatus.UNAUTHORIZED).json('UNAUTHORIZED');
     }
 
     return response.status(HttpStatus.OK).json(result);

@@ -6,11 +6,6 @@ export class BusRouteDTO implements Partial<BusRoute> {
   @IsNotEmpty()
   @IsString()
   @ApiProperty()
-  busNo: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
   routeFrom: string;
 
   @IsNotEmpty()

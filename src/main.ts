@@ -54,6 +54,9 @@ async function bootstrap() {
     .setDescription('Automatically generated API documentation')
     .setVersion('1.0')
     .setExternalDoc('Export API documentation as json file', 'docs/api/download')
+    .addTag('Auth API', 'Auth account management')
+    .addTag('Bus API', 'Manage bus details')
+    .addTag('Bus Routes API', 'Manage available bus routes to buy/book tickets from')
     .build();
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
 
