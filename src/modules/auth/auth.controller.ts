@@ -24,6 +24,10 @@ export class AuthController {
   async loginHandler(@Body() payload: AuthCredentialsDTO, @Res() response: Response) {
     const result = await this.authService.authenticateAccount(payload);
 
+    if (!result) {
+      return response.status(HttpStatus.UNAUTHORIZED).json(result);
+    }
+
     return response.status(HttpStatus.OK).json(result);
   }
 

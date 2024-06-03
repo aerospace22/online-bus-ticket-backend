@@ -7,8 +7,18 @@ async function populateDatabase() {
   const password = await argon2.hash('password');
   await prisma.user.create({
     data: {
-      accountType: 'customer',
+      accountType: 'admin',
       accountNo: 'USR-00001',
+      firstName: 'Admin',
+      lastName: 'Account',
+      email: 'admin@domain.com',
+      password,
+    },
+  });
+  await prisma.user.create({
+    data: {
+      accountType: 'customer',
+      accountNo: 'USR-00002',
       firstName: 'John',
       lastName: 'Doe',
       email: 'john.doe@domain.com',

@@ -5,6 +5,7 @@ import { User } from '@prisma/client';
 export type AuthCredentials = {
   email: string;
   password: string;
+  loginType: 'admin' | 'customer';
 };
 
 export type AccountData = Pick<
@@ -22,6 +23,11 @@ export class AuthCredentialsDTO implements AuthCredentials {
   @IsString()
   @ApiProperty()
   password: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  loginType: 'admin' | 'customer';
 }
 
 export class AccountDataDTO extends AuthCredentialsDTO {

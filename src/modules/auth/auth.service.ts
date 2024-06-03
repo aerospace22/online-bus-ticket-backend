@@ -29,20 +29,15 @@ export class AuthService {
   }
 
   protected async verifyUserPassword(user: User, loginPassword: string) {
-    const { password: userHashedPassword } = user;
-
-    if (!user) return false;
-    if (!(await verifyPassword(loginPassword, userHashedPassword))) return false;
-
-    return true;
+    return await verifyPassword(loginPassword, user.password);
   }
 
   async authenticateAccount(credentials: AuthCredentials) {
     const { email, password } = credentials;
     const user = await this.usersService.findByEmail(email);
 
-    if (!(await this.verifyUserPassword(user, password))) {
-      return new UnauthorizedException();
+    if (!user || !(await this.verifyUserPassword(user, password))) {
+      return null;
     }
 
     delete user.password;

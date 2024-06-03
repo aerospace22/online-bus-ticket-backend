@@ -4,7 +4,7 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BusTicketsService } from './bus-tickets.service';
 import { BusTicketDTO } from './bus-tickets.dto';
 
-@ApiTags('Bus Routes API')
+@ApiTags('Bus Tickets API')
 @Controller({
   path: 'bus-tickets',
   version: '1',
