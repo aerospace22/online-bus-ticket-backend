@@ -1,6 +1,6 @@
 import { IsString, IsNumber, IsOptional, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { BusRoute } from '@prisma/client';
+import { BusRoute, BusRouteTicket } from '@prisma/client';
 
 export class BusRouteDTO implements Partial<BusRoute> {
   @IsNotEmpty()
@@ -47,4 +47,26 @@ export class BusRouteDTO implements Partial<BusRoute> {
   @IsString()
   @ApiProperty()
   arrivalDate: string;
+}
+
+export class BusRouteTicketDTO implements Partial<BusRouteTicket> {
+  @IsNotEmpty()
+  @IsNumber()
+  @ApiProperty()
+  busRouteId: number;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  type: 'ordinary' | 'premium';
+
+  @IsNotEmpty()
+  @IsNumber()
+  @ApiProperty()
+  availableCount: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @ApiProperty()
+  price: number;
 }

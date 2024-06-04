@@ -22,6 +22,7 @@ model User {
   email                        String                       @unique
   password                     String
   isVerified                   Boolean                      @default(false)
+  isEnabled                    Boolean                      @default(false)
   isBlacklisted                Boolean                      @default(false)
   createdAt                    DateTime                     @default(now())
   updatedAt                    DateTime?                    @updatedAt
@@ -66,22 +67,23 @@ model BusStaff {
 }
 
 model BusRoute {
-  id              Int                     @id @default(autoincrement())
-  busId           Int
-  routeCode       String                  @unique
-  routeFrom       String
-  routeTo         String
-  routeFromMapPin String?
-  routeToMapPin   String?
-  departureTime   String
-  departureDate   String
-  arrivalTime     String?
-  arrivalDate     String?
-  status          String                  @default("pending")
-  createdAt       DateTime                @default(now())
-  updatedAt       DateTime?               @updatedAt
-  busRouteTicket  BusRouteBookingTicket[]
-  bus             Bus                     @relation(references: [id], fields: [busId], onDelete: Cascade)
+  id                     Int                     @id @default(autoincrement())
+  busId                  Int
+  routeCode              String                  @unique
+  routeFrom              String
+  routeTo                String
+  routeFromMapPin        String?
+  routeToMapPin          String?
+  departureTime          String
+  departureDate          String
+  arrivalTime            String?
+  arrivalDate            String?
+  status                 String                  @default("pending")
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime?               @updatedAt
+  bus                    Bus                     @relation(references: [id], fields: [busId], onDelete: Cascade)
+  busRouteTicketBookings BusRouteBookingTicket[]
+  busRouteTickets        BusRouteTicket[]
 }
 
 model BusRouteTicket {
@@ -92,6 +94,7 @@ model BusRouteTicket {
   price          Float
   createdAt      DateTime  @default(now())
   updatedAt      DateTime? @updatedAt
+  busRoute       BusRoute  @relation(references: [id], fields: [busRouteId], onDelete: Cascade)
 }
 
 model BusRouteBookingTicket {

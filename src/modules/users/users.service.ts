@@ -22,7 +22,7 @@ export class UsersService {
     const user = await this.db.user.create({
       data: {
         ...data,
-        accountNo: '1',
+        accountNo: new Date().getTime().toString(),
       },
     });
 

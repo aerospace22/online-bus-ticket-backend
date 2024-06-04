@@ -2,7 +2,7 @@ import { Controller, Res, Get, Post, Patch, Delete, Body, HttpStatus, Param } fr
 import { Response } from 'express';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BusRoutesService } from './bus-routes.service';
-import { BusRouteDTO } from './bus-routes.dto';
+import { BusRouteDTO, BusRouteTicketDTO } from './bus-routes.dto';
 
 @ApiTags('Bus Routes API')
 @Controller({
@@ -67,6 +67,32 @@ export class BusRoutesController {
   @Post('/')
   async createBusRouteHandler(@Body() busRouteDTO: BusRouteDTO, @Res() response: Response) {
     const data = await this.busRoutesService.create(busRouteDTO);
+
+    return response.status(HttpStatus.CREATED).json(data);
+  }
+
+  @ApiResponse({
+    status: 200,
+    description: 'Get Tickets BusRoute by id',
+  })
+  @Get('/tickets/:id')
+  async getBusRouteTicketsByRouteHandler(@Param('id') id: number, @Res() response: Response) {
+    const data = await this.busRoutesService.getTicketsByBusRouteId(+id);
+
+    return response.status(HttpStatus.OK).json(data);
+  }
+
+  @ApiResponse({
+    status: 201,
+    description: 'Create Ticket BusRoute by id',
+  })
+  @Post('/tickets/:id')
+  async createTicketForBusRouteIdHandler(
+    @Param('id') id: number,
+    @Body() busRouteTicketDTO: BusRouteTicketDTO,
+    @Res() response: Response,
+  ) {
+    const data = await this.busRoutesService.createTicketForBusRouteId(busRouteTicketDTO);
 
     return response.status(HttpStatus.CREATED).json(data);
   }

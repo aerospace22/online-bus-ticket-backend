@@ -28,7 +28,8 @@ export class BusRoutesService {
             busStaffs: true,
           },
         },
-        busRouteTicket: true,
+        busRouteTickets: true,
+        busRouteTicketBookings: true,
       },
     });
   }
@@ -55,6 +56,23 @@ export class BusRoutesService {
     data.routeCode = `${bus.busNo}${new Date().getUTCMilliseconds()}`;
 
     return await this.prismaService.busRoute.create({
+      data,
+    });
+  }
+
+  async getTicketsByBusRouteId(id: number) {
+    return await this.prismaService.busRouteTicket.findMany({
+      where: {
+        busRouteId: id,
+      },
+      orderBy: {
+        type: 'desc',
+      },
+    });
+  }
+
+  async createTicketForBusRouteId(data: any) {
+    return await this.prismaService.busRouteTicket.create({
       data,
     });
   }

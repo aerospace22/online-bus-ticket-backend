@@ -55,6 +55,7 @@ async function bootstrap() {
     .setVersion('1.0')
     .setExternalDoc('Export API documentation as json file', '/api/download')
     .addTag('Auth API', 'Auth account management')
+    .addTag('Accounts API', 'Accounts management')
     .addTag('Bus API', 'Manage bus unit details')
     .addTag('Bus Staffs API', 'Manage drivers/conductors to be assigned per bus unit')
     .addTag('Bus Routes API', 'Manage available bus routes to buy/book tickets from')

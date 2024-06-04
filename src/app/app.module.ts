@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { PaymentsService } from '@/services';
 import { AppService } from '@/app/app.service';
 import { AuthModule } from '@/modules/auth/auth.module';
+import { AccountsModule } from '@/modules/accounts/accounts.module';
 import { UsersModule } from '@/modules/users/users.module';
 import { BusModule } from '@/modules/bus/bus.module';
 import { BusRoutesModule } from '@/modules/bus-routes/bus-routes.module';
@@ -35,6 +36,7 @@ const mailerModuleOpts = {
     ConfigModule.forRoot(configModuleOpts),
     MailerModule.forRoot(mailerModuleOpts),
     AuthModule,
+    AccountsModule,
     UsersModule,
     BusModule,
     BusStaffsModule,

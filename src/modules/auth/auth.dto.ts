@@ -30,7 +30,17 @@ export class AuthCredentialsDTO implements AuthCredentials {
   loginType: 'admin' | 'customer';
 }
 
-export class AccountDataDTO extends AuthCredentialsDTO {
+export class AccountDataDTO {
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  email: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  password: string;
+
   @IsNotEmpty()
   @IsString()
   @ApiProperty()
