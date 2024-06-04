@@ -9,6 +9,8 @@ import { AuthModule } from '@/modules/auth/auth.module';
 import { UsersModule } from '@/modules/users/users.module';
 import { BusModule } from '@/modules/bus/bus.module';
 import { BusRoutesModule } from '@/modules/bus-routes/bus-routes.module';
+import { BusStaffsModule } from '@/modules/bus-staffs/bus-staffs.module';
+import { BusTicketPaymentsModule } from '@/modules/bus-ticket-payments/bus-ticket-payments.module';
 
 const configService: ConfigService = new ConfigService();
 
@@ -35,7 +37,9 @@ const mailerModuleOpts = {
     AuthModule,
     UsersModule,
     BusModule,
+    BusStaffsModule,
     BusRoutesModule,
+    BusTicketPaymentsModule,
   ],
   controllers: [AppController],
   providers: [AppService, PaymentsService],

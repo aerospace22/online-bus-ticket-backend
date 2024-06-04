@@ -4,6 +4,11 @@ import { BusRoute } from '@prisma/client';
 
 export class BusRouteDTO implements Partial<BusRoute> {
   @IsNotEmpty()
+  @IsNumber()
+  @ApiProperty()
+  busId: number;
+
+  @IsNotEmpty()
   @IsString()
   @ApiProperty()
   routeFrom: string;
@@ -22,11 +27,6 @@ export class BusRouteDTO implements Partial<BusRoute> {
   @IsString()
   @ApiProperty()
   routeToMapPin: string;
-
-  @IsNotEmpty()
-  @IsNumber()
-  @ApiProperty()
-  ticketPrice: number;
 
   @IsNotEmpty()
   @IsString()

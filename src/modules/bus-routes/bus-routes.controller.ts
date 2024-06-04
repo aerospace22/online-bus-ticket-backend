@@ -28,8 +28,8 @@ export class BusRoutesController {
     description: 'Get BusRoute by id',
   })
   @Get('/:id')
-  async getBusRouteHandler(@Param() id: number, @Res() response: Response) {
-    const data = await this.busRoutesService.getById(id);
+  async getBusRouteHandler(@Param('id') id: number, @Res() response: Response) {
+    const data = await this.busRoutesService.getById(+id);
 
     return response.status(HttpStatus.OK).json(data);
   }
@@ -55,7 +55,7 @@ export class BusRoutesController {
   })
   @Delete('/:id')
   async deleteBusRouteHandler(@Param('id') id: number, @Res() response: Response) {
-    const data = await this.busRoutesService.deleteById(id);
+    const data = await this.busRoutesService.deleteById(+id);
 
     return response.status(HttpStatus.NO_CONTENT).json(data);
   }

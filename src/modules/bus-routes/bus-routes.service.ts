@@ -11,6 +11,9 @@ export class BusRoutesService {
       orderBy: {
         id: 'desc',
       },
+      include: {
+        bus: true,
+      },
     });
   }
 
@@ -18,6 +21,14 @@ export class BusRoutesService {
     return await this.prismaService.busRoute.findUnique({
       where: {
         id,
+      },
+      include: {
+        bus: {
+          include: {
+            busStaffs: true,
+          },
+        },
+        busRouteTicket: true,
       },
     });
   }
@@ -40,7 +51,8 @@ export class BusRoutesService {
   }
 
   async create(data: any) {
-    data.routeCode = `${data.busNo}${new Date().getUTCMilliseconds()}`;
+    const bus = await this.prismaService.bus.findUnique({ where: { id: data.busId } });
+    data.routeCode = `${bus.busNo}${new Date().getUTCMilliseconds()}`;
 
     return await this.prismaService.busRoute.create({
       data,

@@ -14,10 +14,10 @@ export class BusController {
 
   @ApiResponse({
     status: 200,
-    description: 'List of BusRoutes',
+    description: 'List of Bus',
   })
   @Get('/')
-  async getBusRoutesHandler(@Res() response: Response) {
+  async getBussesHandler(@Res() response: Response) {
     const data = await this.busService.getAll();
 
     return response.status(HttpStatus.OK).json(data);
@@ -25,21 +25,21 @@ export class BusController {
 
   @ApiResponse({
     status: 200,
-    description: 'Get BusRoute by id',
+    description: 'Get Bus by id',
   })
   @Get('/:id')
-  async getBusRouteHandler(@Param() id: number, @Res() response: Response) {
-    const data = await this.busService.getById(id);
+  async getBusHandler(@Param('id') id: number, @Res() response: Response) {
+    const data = await this.busService.getById(+id);
 
     return response.status(HttpStatus.OK).json(data);
   }
 
   @ApiResponse({
     status: 200,
-    description: 'Update BusRoute by id',
+    description: 'Update Bus by id',
   })
   @Patch('/:id')
-  async updateBusRouteHandler(
+  async updateBusHandler(
     @Param('id') id: number,
     @Body() busDTO: BusDTO,
     @Res() response: Response,
@@ -51,21 +51,21 @@ export class BusController {
 
   @ApiResponse({
     status: 204,
-    description: 'Delete BusRoute by id',
+    description: 'Delete Bus by id',
   })
   @Delete('/:id')
-  async deleteBusRouteHandler(@Param('id') id: number, @Res() response: Response) {
-    const data = await this.busService.deleteById(id);
+  async deleteBusHandler(@Param('id') id: number, @Res() response: Response) {
+    const data = await this.busService.deleteById(+id);
 
     return response.status(HttpStatus.NO_CONTENT).json(data);
   }
 
   @ApiResponse({
     status: 201,
-    description: 'Successfully created BusRoute',
+    description: 'Successfully created Buss',
   })
   @Post('/')
-  async createBusRouteHandler(@Body() busDTO: BusDTO, @Res() response: Response) {
+  async createBusHandler(@Body() busDTO: BusDTO, @Res() response: Response) {
     const data = await this.busService.create(busDTO);
 
     return response.status(HttpStatus.CREATED).json(data);

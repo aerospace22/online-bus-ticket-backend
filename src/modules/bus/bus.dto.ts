@@ -13,16 +13,6 @@ export class BusDTO implements Partial<Bus> {
   @ApiProperty()
   plateNo: string;
 
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
-  driverName: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
-  conductorName: string;
-
   @IsOptional()
   @IsString()
   @ApiProperty()

@@ -4,9 +4,9 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BusStaffsService } from './bus-staffs.service';
 import { BusStaffDTO } from './bus-staffs.dto';
 
-@ApiTags('Bus API')
+@ApiTags('Bus Staffs API')
 @Controller({
-  path: 'bus',
+  path: 'bus-staffs',
   version: '1',
 })
 export class BusStaffsController {
@@ -14,10 +14,10 @@ export class BusStaffsController {
 
   @ApiResponse({
     status: 200,
-    description: 'List of BusRoutes',
+    description: 'List of BusStaffs',
   })
   @Get('/')
-  async getBusRoutesHandler(@Res() response: Response) {
+  async getBusStaffsHandler(@Res() response: Response) {
     const data = await this.busStaffs.getAll();
 
     return response.status(HttpStatus.OK).json(data);
@@ -25,21 +25,21 @@ export class BusStaffsController {
 
   @ApiResponse({
     status: 200,
-    description: 'Get BusRoute by id',
+    description: 'Get BusStaff by id',
   })
   @Get('/:id')
-  async getBusRouteHandler(@Param() id: number, @Res() response: Response) {
-    const data = await this.busStaffs.getById(id);
+  async getBusStaffHandler(@Param('id') id: number, @Res() response: Response) {
+    const data = await this.busStaffs.getById(+id);
 
     return response.status(HttpStatus.OK).json(data);
   }
 
   @ApiResponse({
     status: 200,
-    description: 'Update BusRoute by id',
+    description: 'Update BusStaff by id',
   })
   @Patch('/:id')
-  async updateBusRouteHandler(
+  async updateBusStaffHandler(
     @Param('id') id: number,
     @Body() busStaffDTO: BusStaffDTO,
     @Res() response: Response,
@@ -51,21 +51,21 @@ export class BusStaffsController {
 
   @ApiResponse({
     status: 204,
-    description: 'Delete BusRoute by id',
+    description: 'Delete BusStaff by id',
   })
   @Delete('/:id')
-  async deleteBusRouteHandler(@Param('id') id: number, @Res() response: Response) {
-    const data = await this.busStaffs.deleteById(id);
+  async deleteBusStaffHandler(@Param('id') id: number, @Res() response: Response) {
+    const data = await this.busStaffs.deleteById(+id);
 
     return response.status(HttpStatus.NO_CONTENT).json(data);
   }
 
   @ApiResponse({
     status: 201,
-    description: 'Successfully created BusRoute',
+    description: 'Successfully created BusStaff',
   })
   @Post('/')
-  async createBusRouteHandler(@Body() busStaffDTO: BusStaffDTO, @Res() response: Response) {
+  async createBusStaffHandler(@Body() busStaffDTO: BusStaffDTO, @Res() response: Response) {
     const data = await this.busStaffs.create(busStaffDTO);
 
     return response.status(HttpStatus.CREATED).json(data);
