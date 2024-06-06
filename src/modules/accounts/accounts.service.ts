@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { PrismaService } from '@/services';
+import { UsersService } from '@/modules/users/users.service';
 import { hashPassword } from '@/utils/password.util';
 
 @Injectable()
 export class AccountsService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly usersService: UsersService,
+  ) {}
 
   async getAll() {
     return await this.prismaService.user.findMany({

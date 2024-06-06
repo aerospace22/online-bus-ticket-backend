@@ -1,7 +1,8 @@
-import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
+import { PrismaService, MailService } from '@/services';
 import { UsersService } from '@/modules/users/users.service';
 import { AuthCredentials, AccountData } from './auth.dto';
 import { verifyPassword } from '@/utils/password.util';
@@ -11,6 +12,8 @@ export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+    private readonly prismaService: PrismaService,
+    private readonly mailService: MailService,
   ) {}
 
   public static get JWT_SECRET_KEY() {
@@ -28,20 +31,23 @@ export class AuthService {
     return digits;
   }
 
-  protected async verifyUserPassword(user: User, loginPassword: string) {
-    return await verifyPassword(loginPassword, user.password);
+  protected async verifyUserCredentials(user: User, credentials: AuthCredentials) {
+    if (
+      !(await verifyPassword(credentials.password, user.password)) ||
+      !user.accountType.includes(credentials.loginType)
+    ) {
+      return false;
+    }
+
+    return true;
   }
 
   async authenticateAccount(credentials: AuthCredentials) {
-    const { email, password, loginType } = credentials;
+    const { email } = credentials;
 
     const user = await this.usersService.findByEmail(email);
 
-    if (
-      !user ||
-      !user.accountType.includes(loginType) ||
-      !(await this.verifyUserPassword(user, password))
-    ) {
+    if (!user || !(await this.verifyUserCredentials(user, credentials))) {
       return null;
     }
 
@@ -61,27 +67,66 @@ export class AuthService {
     }
 
     const user = await this.usersService.create(data);
-    const otp = await this.requestOTP(user.email);
+    const otp = await this.createOtp(user.email);
 
     return { user, otp };
   }
 
-  async requestOTP(email: string) {
+  async createOtp(email: string) {
     const user = await this.usersService.findByEmail(email);
 
     if (!user) {
-      return new UnauthorizedException();
+      return {
+        message: 'EMAIL_NOT_FOUND',
+      };
     }
 
-    // TODO: Generate & save otp token of user
-    // TODO: Send generated otp to user email
+    const generatedCode = Math.floor(100000 + Math.random() * 900000);
+    const expiresAt = new Date().getTime() + 2 * 60 * 60 * 1000;
+    const userOtp = await this.prismaService.userOtp.create({
+      data: {
+        userId: user.id,
+        code: generatedCode.toString(),
+        expiresAt: new Date(expiresAt).toISOString(),
+      },
+    });
+
+    this.mailService.sendMail({
+      to: 'patrickpolicarpio08@gmail.com',
+      subject: 'Verify Your Account',
+      message: `Your account verification ONE-TIME-PASSCODE: ${userOtp.code}`,
+    });
 
     return {
-      status: 'SENT',
+      message: 'REQUESTED_OTP_CREATED',
+      expiresAt: userOtp.expiresAt,
     };
   }
 
-  async createAccount(data: any) {
-    console.log(data);
+  async verifyOtp(data: { code: string }) {
+    const otp = await this.prismaService.userOtp.findFirst({
+      where: {
+        code: data.code,
+      },
+    });
+
+    if (otp) {
+      await this.prismaService.userOtp.update({
+        where: {
+          id: otp.id,
+        },
+        data: {
+          isUsed: true,
+        },
+      });
+
+      return {
+        message: 'OTP_VALID',
+      };
+    }
+
+    return {
+      message: 'OTP_INVALID',
+    };
   }
 }

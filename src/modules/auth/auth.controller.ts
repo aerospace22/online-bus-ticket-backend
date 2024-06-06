@@ -2,7 +2,7 @@ import { Controller, Res, Body, Post, HttpStatus } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { MailService } from '@/services';
-import { AuthCredentialsDTO, AccountDataDTO } from './auth.dto';
+import { AuthCredentialsDTO, AccountDataDTO, AccountOtpDTO } from './auth.dto';
 import { AuthService } from './auth.service';
 
 @ApiTags('Auth API')
@@ -47,17 +47,13 @@ export class AuthController {
     description: 'Request OTP success',
   })
   @Post('/request-otp')
-  async requestOtpHandler(@Res() response: Response) {
-    this.mailService.sendMail({
-      to: 'patrickpolicarpio08@gmail.com',
-      subject: 'Test mail notification',
-      message: 'Test mail notification',
-    });
+  async requestOtpHandler(@Body() accountOtpDTO: AccountOtpDTO, @Res() response: Response) {
+    const result = await this.authService.createOtp(accountOtpDTO.email);
 
-    return response.status(HttpStatus.OK).json('mail sent');
+    if (result.message === 'EMAIL_NOT_FOUND') {
+      return response.status(HttpStatus.BAD_REQUEST).json(result);
+    }
+
+    return response.status(HttpStatus.OK).json(result);
   }
-
-  // TODO: Verify OTP api
-
-  // TODO: Update password api
 }

@@ -51,3 +51,10 @@ export class AccountDataDTO {
   @ApiProperty()
   lastName: string;
 }
+
+export class AccountOtpDTO {
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  email: string;
+}
