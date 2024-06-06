@@ -82,7 +82,7 @@ export class AuthService {
     }
 
     const generatedCode = Math.floor(100000 + Math.random() * 900000);
-    const expiresAt = new Date().getTime() + 2 * 60 * 60 * 1000;
+    const expiresAt = new Date().getTime() + 2 * 60 * 60 * 1000; // Add 24hrs expiration
     const userOtp = await this.prismaService.userOtp.create({
       data: {
         userId: user.id,
@@ -103,14 +103,14 @@ export class AuthService {
     };
   }
 
-  async verifyOtp(data: { code: string }) {
+  async verifyOtp(code: string) {
     const otp = await this.prismaService.userOtp.findFirst({
       where: {
-        code: data.code,
+        code,
       },
     });
 
-    if (otp) {
+    if (otp && !otp.isUsed && new Date(otp.expiresAt) > new Date()) {
       await this.prismaService.userOtp.update({
         where: {
           id: otp.id,

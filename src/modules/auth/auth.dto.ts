@@ -58,3 +58,10 @@ export class AccountOtpDTO {
   @ApiProperty()
   email: string;
 }
+
+export class AccountVerifyOtpDTO {
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  code: string;
+}
